@@ -1,0 +1,27 @@
+services:
+  mysql:
+    container_name: saa-mysql
+    image: bitnami/mysql
+    volumes:
+      - ./.docker/mysql:/docker-entrypoint-initdb.d
+      - saa-mysql:/bitnami/mysql/data
+    restart: always
+    ports:
+      - 3306:3306
+    labels:
+      - traefik.enable=false
+    environment:
+      - MYSQL_AUTHENTICATION_PLUGIN=mysql_native_password
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=simpleaa
+      - MYSQL_USER=simpleaa-dev
+      - MYSQL_PASSWORD=password
+      
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+volumes:
+  saa-mysql: {}

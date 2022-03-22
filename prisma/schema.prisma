@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String  @id @default(uuid())
+  author_name String?
+  username    String  @unique
+  password    String
+
+  articles Article[]
+
+  active Boolean @default(false)
+  admin  Boolean @default(false)
+
+  @@map("users")
+}
+
+model Article {
+  id    String @id @default(uuid())
+  title String
+  text  String @db.Text
+
+  views Int @default(0) @db.Int
+
+  public Boolean @default(false)
+
+  author  User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  article_tags ArticleTag[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@map("articles")
+}
+
+model ArticleTag {
+  id    String @id @default(uuid())
+  code  String @unique
+  title String
+
+  articles Article[]
+}
